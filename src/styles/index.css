@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-text: #111;
+  --color-regular-text: #222;
+  --color-faint-text: #555;
+
+  --color-grey-bg: #777;
+}
+
+@layer base {
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Golos Text", "Trebuchet MS", Tahoma, sans-serif;
+  }
+}
+
+@layer components {
+  .styled-scrollbar {
+    @apply [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-full [&::-webkit-scrollbar-thumb]:bg-sky-800/60 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:transition-colors [&::-webkit-scrollbar-thumb]:duration-100 [&::-webkit-scrollbar-thumb:hover]:bg-sky-800 [&::-webkit-scrollbar-thumb:hover]:cursor-pointer [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-button]:hidden;
+  }
+
+  .button-primary {
+    @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 w-fit rounded-sm md:rounded-md bg-sky-800 hover:bg-sky-900 text-slate-100 disabled:bg-gray-600 disabled:text-white disabled:cursor-not-allowed;
+  }
+
+  .heading-primary {
+    @apply text-lg lg:text-xl xl:text-2xl 2xl:text-3xl lg:tracking-tight xl:tracking-tighter font-semibold md:font-bold xl:font-black text-dark-text;
+  }
+
+  .heading-secondary {
+    @apply text-sm lg:text-lg 2xl:text-2xl xl:tracking-tighter font-semibold xl:font-bold text-dark-text;
+  }
+}
