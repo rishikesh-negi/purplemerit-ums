@@ -35,14 +35,30 @@
   }
 
   .button-primary {
-    @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 w-fit rounded-sm md:rounded-md bg-sky-800 hover:bg-sky-900 text-slate-100 disabled:bg-gray-600 disabled:text-white disabled:cursor-not-allowed;
+    @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 w-fit rounded-sm md:rounded-md bg-sky-800 hover:bg-sky-900 text-slate-100 cursor-pointer disabled:bg-gray-600 disabled:text-white disabled:cursor-not-allowed;
+  }
+
+  .button-link {
+    @apply text-xs md:text-sm lg:text-lg underline underline-offset-4 text-sky-700 hover:text-sky-800 hover:font-semibold cursor-pointer;
   }
 
   .heading-primary {
-    @apply text-lg lg:text-xl xl:text-2xl 2xl:text-3xl lg:tracking-tight xl:tracking-tighter font-semibold md:font-bold xl:font-black text-dark-text;
+    @apply text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold md:font-bold xl:font-black text-slate-600;
   }
 
   .heading-secondary {
-    @apply text-sm lg:text-lg 2xl:text-2xl xl:tracking-tighter font-semibold xl:font-bold text-dark-text;
+    @apply text-sm lg:text-lg 2xl:text-2xl xl:tracking-tighter font-semibold xl:font-bold text-slate-600;
+  }
+
+  .form-base {
+    @apply relative w-fit px-6 lg:px-8 py-3 lg:py-4 rounded-md xl:rounded-lg flex flex-col gap-4 bg-gray-50 shadow-lg;
+  }
+
+  .form-text-input {
+    @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 rounded-sm xl:rounded-md bg-slate-300 text-xs lg:text-lg text-dark-text outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-sky-700 disabled:text-faint-text disabled:cursor-not-allowed;
+  }
+
+  .form-select-input {
+    @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 rounded-sm xl:rounded-md bg-slate-300 text-xs lg:text-lg text-dark-text outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-sky-700 disabled:text-faint-text disabled:cursor-not-allowed border-r-4 border-slate-300;
   }
 }
