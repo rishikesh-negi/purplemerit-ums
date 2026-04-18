@@ -12,7 +12,7 @@ export default function SideNavLink({ link }: SideNavLinkProps) {
 
   return (
     <li
-      className={`w-full text-sm sm:text-md hover:bg-slate-200 hover:font-semibold ${link.href === urlLocation.pathname && "bg-slate-100 border-l-4 border-sky-700 font-semibold"} no-border-transition transition-colors duration-100`}
+      className={`w-full text-sm sm:text-md xl:text-lg hover:bg-gray-200 hover:font-semibold ${link.href === urlLocation.pathname && "bg-gray-200 border-l-4 border-sky-700 font-semibold"} no-border-transition transition-colors duration-100`}
       tabIndex={sideNavIsOpen ? 1 : 0}>
       <Link
         to={link.href}
