@@ -2,6 +2,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/ui/AppLayout";
 import { MobileSideNavToggleProvider } from "./context/MobileSideNavContext";
+import { Provider } from "react-redux";
+import store from "./store/store";
+import Signup from "./pages/Signup";
+import { Toaster } from "react-hot-toast";
+import Home from "./pages/Home";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,14 +22,20 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            index
             element={
-              <MobileSideNavToggleProvider>
-                <AppLayout />
-              </MobileSideNavToggleProvider>
-            }></Route>
+              <Provider store={store}>
+                <MobileSideNavToggleProvider>
+                  <AppLayout />
+                </MobileSideNavToggleProvider>
+              </Provider>
+            }>
+            <Route index element={<Home />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
         </Routes>
       </BrowserRouter>
+
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
