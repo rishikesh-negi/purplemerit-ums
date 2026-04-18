@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useSideNavToggle } from "../../context/MobileSideNavContext";
 import SideNavigation from "../SideNavigation";
-// import Header from "./Header";
+import Header from "../Header";
 
 export default function AppLayout() {
   const { sideNavIsOpen, setSideNavIsOpen } = useSideNavToggle();
@@ -13,10 +13,10 @@ export default function AppLayout() {
           className="fixed inset-0 backdrop-blur-lg z-10"
           onClick={() => setSideNavIsOpen(false)}></div>
       )}
-      {/* <Header /> */}
+      <Header />
       <SideNavigation />
 
-      <main className="col-span-1 sm:col-start-2 sm:col-end-3 row-start-2 row-end-3 bg-slate-100 grid overflow-y-auto styled-scrollbar">
+      <main className="col-span-1 sm:col-start-2 sm:col-end-3 row-start-2 row-end-3 bg-gray-100 grid overflow-y-auto styled-scrollbar">
         <div className="max-w-7xl w-full px-6 md:px-8 lg:px-12 xl:px-20 py-4 md:py-6 lg-py-8 xl:py-10 mx-auto flex flex-col">
           <Outlet />
         </div>
