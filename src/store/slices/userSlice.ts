@@ -9,7 +9,7 @@ type CreatorOrUpdator = {
   [key: string]: unknown;
 } | null;
 
-export type UserState = {
+export type User = {
   id: string;
   firstName: string;
   lastName: string;
@@ -17,20 +17,32 @@ export type UserState = {
   username: string;
   email: string;
   role: "user" | "manager" | "admin";
-  active: boolean;
   createdBy: CreatorOrUpdator;
   updatedBy: CreatorOrUpdator;
-} | null;
+};
 
-const initialState: UserState = null;
+export type UserState = User | null;
+
+const initialState: UserState = null as UserState;
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state: UserState, action: PayloadAction<{ data: UserState }>) {
-      if (!action.payload.data || Object.keys(action.payload.data).length) return;
-      state = action.payload.data;
+    setUser(_state, action: PayloadAction<{ data: UserState & { _id: string } }>) {
+      if (!action.payload.data || Object.keys(action.payload.data).length === 0)
+        return initialState;
+      return {
+        id: action.payload.data._id,
+        firstName: action.payload.data.firstName,
+        lastName: action.payload.data.lastName,
+        fullName: action.payload.data.fullName,
+        username: action.payload.data.username,
+        email: action.payload.data.email,
+        role: action.payload.data.role,
+        createdBy: action.payload.data.createdBy,
+        updatedBy: action.payload.data.updatedBy,
+      };
     },
   },
 });
