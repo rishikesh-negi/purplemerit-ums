@@ -14,11 +14,12 @@ export function useSignup() {
 
   const { mutate: signup, isPending: isSigningUp } = useMutation({
     mutationFn: signupApi,
-    onSuccess: (data) => {
+    onSuccess: (queryData) => {
+      const { data } = queryData;
       dispatch(
         setAuth({ accessToken: data.accessToken, accessTokenExpiresAt: data.accessTokenExpiresAt }),
       );
-      dispatch(setUser({ data: data.user }));
+      dispatch(setUser({ data }));
 
       toast.custom((t) => <AppToast type="success" message="Signup successful!" toastId={t.id} />, {
         duration: 3000,
