@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import Form, { type FormApi } from "../components/Form";
+import Button from "../components/ui/Button";
 import FormTextInput from "../components/ui/FormTextInput";
 import { useSignup } from "../hooks/useSignup";
-import Button from "../components/ui/Button";
 
 export type SignupData = {
   firstName: string;
@@ -25,7 +25,10 @@ export default function Signup() {
   }
 
   return (
-    <section className="w-full h-full flex flex-col items-center">
+    <section className="w-full h-full flex flex-col items-center gap-10">
+      <Button to="/" textOnly className="button-link block w-full">
+        &larr; Home
+      </Button>
       <Form
         ref={formApiRef}
         heading="Sign up to UMS!"
