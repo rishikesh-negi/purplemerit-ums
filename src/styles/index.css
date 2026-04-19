@@ -61,4 +61,14 @@
   .form-select-input {
     @apply px-2 md:px-3 xl:px-4 py-0.5 md:py-1 xl:py-1.5 rounded-sm xl:rounded-md bg-slate-300 text-xs lg:text-lg text-dark-text outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-sky-700 disabled:text-faint-text disabled:cursor-not-allowed border-r-4 border-slate-300;
   }
+
+  .spinner {
+    animation: spin 1.5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
 }
