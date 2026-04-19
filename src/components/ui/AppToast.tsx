@@ -21,7 +21,7 @@ export default function AppToast({ type, message, toastId }: AppToastProps) {
       <span>{icon}</span>
       <p>{message}</p>
       <button
-        className="ml-auto pl-3 lg:pl-4 content-end text-gray-50 text-sm lg:text-lg xl:text-xl font-bold cursor-pointer"
+        className="ml-auto pl-3 lg:pl-4 content-end text-gray-50 text-lg lg:text-xl xl:text-2xl font-semibold cursor-pointer"
         onClick={() => toast.dismiss(toastId)}>
         &times;
       </button>
