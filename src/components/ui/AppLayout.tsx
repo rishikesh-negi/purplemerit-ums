@@ -2,9 +2,27 @@ import { Outlet } from "react-router-dom";
 import { useSideNavToggle } from "../../context/MobileSideNavContext";
 import SideNavigation from "../SideNavigation";
 import Header from "../Header";
+import { useRefreshSession } from "../../hooks/useRefreshSession";
+import { useAppSelector } from "../../store/storeHooks";
+import { getAuthState } from "../../store/slices/authSlice";
+import { useEffect } from "react";
+import Spinner from "./Spinner";
 
 export default function AppLayout() {
   const { sideNavIsOpen, setSideNavIsOpen } = useSideNavToggle();
+  const { isAuthenticated, accessTokenExpiresAt } = useAppSelector(getAuthState);
+  const { refreshSession, isRefreshingSession } = useRefreshSession();
+
+  useEffect(() => {
+    if (
+      !isAuthenticated ||
+      (accessTokenExpiresAt && accessTokenExpiresAt?.getTime() - Date.now() <= 1_80_000)
+    ) {
+      refreshSession();
+    }
+  }, [accessTokenExpiresAt, isAuthenticated, refreshSession]);
+
+  if (isRefreshingSession) return <Spinner />;
 
   return (
     <div className="relative w-full h-dvh grid grid-cols-[1fr] sm:grid-cols-[25%_1fr] md:grid-cols-[20%_1fr] xl:grid-cols-[18%_1fr] 2xl:grid-cols-[15%_1fr] grid-rows-[auto_1fr] bg-backdrop text-regular-text">
