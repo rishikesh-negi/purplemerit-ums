@@ -4,28 +4,10 @@ import { API_BASE_URL } from "../utils/appConstants";
 import { isEmail } from "../utils/stringValidators";
 
 export async function signup({ firstName, lastName, username, email, password }: SignupData) {
-  const exists = await fetch(`${API_BASE_URL}/users/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (exists.ok) {
-    throw new Error("An account with this email address already exists. Did you mean to log in?");
-  }
-
   const res = await fetch(`${API_BASE_URL}/users/signup`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ firstName, lastName, username, email, password }),
   });
 
   if (!res.ok) {
@@ -39,9 +21,7 @@ export async function signup({ firstName, lastName, username, email, password }:
 
 export async function login({ emailOrUsername, password }: Credentials) {
   if (!emailOrUsername || !password) throw new Error("Invalid credentials!");
-  const credentials: Record<string, string> = {
-    password,
-  };
+  const credentials: Record<string, string> = { password };
 
   if (isEmail(emailOrUsername)) credentials.email = emailOrUsername;
   else credentials.username = emailOrUsername;
@@ -49,9 +29,7 @@ export async function login({ emailOrUsername, password }: Credentials) {
   const res = await fetch(`${API_BASE_URL}/users/login`, {
     method: "POST",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
   if (!res.ok) throw new Error((await res.json()).message || "Login failed!");
@@ -61,9 +39,7 @@ export async function login({ emailOrUsername, password }: Credentials) {
 }
 
 export async function refreshSession() {
-  const res = await fetch(`${API_BASE_URL}/users/refresh-session`, {
-    credentials: "include",
-  });
+  const res = await fetch(`${API_BASE_URL}/users/refresh-session`, { credentials: "include" });
 
   if (!res.ok)
     throw new Error((await res.json()).message || "Failed to load session. Please log in again");
