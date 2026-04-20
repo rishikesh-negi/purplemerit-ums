@@ -1,8 +1,12 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Form, { type FormApi } from "../components/Form";
 import Button from "../components/ui/Button";
 import FormTextInput from "../components/ui/FormTextInput";
 import { useSignup } from "../hooks/useSignup";
+import { useAppSelector } from "../store/storeHooks";
+import { getUser } from "../store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../components/ui/Spinner";
 
 export type SignupData = {
   firstName: string;
@@ -13,6 +17,9 @@ export type SignupData = {
 };
 
 export default function Signup() {
+  const navigate = useNavigate();
+  const user = useAppSelector(getUser);
+
   const formApiRef = useRef<FormApi>(null);
   const { signup, isSigningUp } = useSignup();
 
@@ -23,6 +30,11 @@ export default function Signup() {
       },
     });
   }
+
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user, navigate]);
+  if (user) return <Spinner />;
 
   return (
     <section className="w-full h-full flex flex-col items-center gap-10">
