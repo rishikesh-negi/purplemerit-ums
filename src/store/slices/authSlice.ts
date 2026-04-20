@@ -20,7 +20,10 @@ const authSlice = createSlice({
     setAuth(state, action: PayloadAction<{ accessToken: string; accessTokenExpiresAt: Date }>) {
       if (!action.payload.accessToken || action.payload.accessToken === "") return;
       state.accessToken = action.payload.accessToken;
-      state.isAuthenticated = state.accessToken !== "";
+      state.isAuthenticated =
+        state.accessToken !== "" &&
+        state.accessTokenExpiresAt !== null &&
+        state.accessTokenExpiresAt?.getTime() > Date.now();
       state.accessTokenExpiresAt = action.payload.accessTokenExpiresAt;
     },
   },
