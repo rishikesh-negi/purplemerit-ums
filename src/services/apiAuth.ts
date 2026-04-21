@@ -16,7 +16,7 @@ export async function signup({ firstName, lastName, username, email, password }:
   }
 
   const authData = await res.json();
-  return { data: authData, statusCode: res.status };
+  return authData;
 }
 
 export async function login({ emailOrUsername, password }: Credentials) {
@@ -35,21 +35,23 @@ export async function login({ emailOrUsername, password }: Credentials) {
   if (!res.ok) throw new Error((await res.json()).message || "Login failed!");
 
   const data = await res.json();
-  return { data, statusCode: res.status };
+  return data;
 }
 
 export async function refreshSession() {
-  const res = await fetch(`${API_BASE_URL}/users/refresh-session`, { credentials: "include" });
+  const authStatus = await fetch(`${API_BASE_URL}/users/check-auth`, { credentials: "include" });
+  if (authStatus.status === 401) return 401;
 
+  const res = await fetch(`${API_BASE_URL}/users/refresh-session`, { credentials: "include" });
   if (!res.ok)
     throw new Error((await res.json()).message || "Failed to load session. Please log in again");
 
   const data = await res.json();
-  return { data, statusCode: res.status };
+  return data;
 }
 
 export async function logout() {
-  const res = await fetch(`${API_BASE_URL}/users/logout`);
+  const res = await fetch(`${API_BASE_URL}/users/logout`, { credentials: "include" });
   if (!res.ok) throw new Error("Failed to log out. Try again.");
   return "success";
 }
