@@ -15,11 +15,9 @@ export function useLogin() {
   const { mutate: login, isPending: isLoggingIn } = useMutation({
     mutationFn: loginApi,
     onSuccess(queryData) {
-      const { data } = queryData;
-      dispatch(setUser({ data: data.user }));
-      dispatch(
-        setAuth({ accessToken: data.accessToken, accessTokenExpiresAt: data.accessTokenExpiresAt }),
-      );
+      const { user, accessToken, accessTokenExpiresAt } = queryData;
+      dispatch(setUser({ data: user }));
+      dispatch(setAuth({ accessToken, accessTokenExpiresAt }));
       toast.custom((t) => <AppToast type="success" message="Logged in!" toastId={t.id} />, {
         duration: 3000,
         id: SUCCESS_TOAST_ID,
