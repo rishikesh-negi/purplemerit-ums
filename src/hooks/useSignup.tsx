@@ -15,11 +15,9 @@ export function useSignup() {
   const { mutate: signup, isPending: isSigningUp } = useMutation({
     mutationFn: signupApi,
     onSuccess: (queryData) => {
-      const { data } = queryData;
-      dispatch(
-        setAuth({ accessToken: data.accessToken, accessTokenExpiresAt: data.accessTokenExpiresAt }),
-      );
-      dispatch(setUser({ data }));
+      const { user, accessToken, accessTokenExpiresAt } = queryData;
+      dispatch(setUser({ data: user }));
+      dispatch(setAuth({ accessToken, accessTokenExpiresAt }));
 
       toast.custom((t) => <AppToast type="success" message="Signup successful!" toastId={t.id} />, {
         duration: 3000,
