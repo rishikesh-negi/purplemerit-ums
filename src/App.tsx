@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import store from "./store/store";
+import QueryWithReauthProvider from "./context/QueryWithReauthContext";
+import Users from "./pages/Users";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,14 +27,17 @@ export default function App() {
           <Route
             element={
               <Provider store={store}>
-                <MobileSideNavToggleProvider>
-                  <AppLayout />
-                </MobileSideNavToggleProvider>
+                <QueryWithReauthProvider>
+                  <MobileSideNavToggleProvider>
+                    <AppLayout />
+                  </MobileSideNavToggleProvider>
+                </QueryWithReauthProvider>
               </Provider>
             }>
             <Route index element={<Home />} />
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+            <Route path="users" element={<Users />} />
           </Route>
         </Routes>
       </BrowserRouter>
