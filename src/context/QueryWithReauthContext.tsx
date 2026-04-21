@@ -1,11 +1,11 @@
-import { createContext, type ReactNode } from "react";
+import { createContext, use, type ReactNode } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import AppToast from "../components/ui/AppToast";
+import { refreshSession } from "../services/apiAuth";
 import { setAuth } from "../store/slices/authSlice";
 import { setUser } from "../store/slices/userSlice";
 import { useAppDispatch } from "../store/storeHooks";
-import { API_BASE_URL, FAIL_TOAST_ID } from "../utils/appConstants";
+import { FAIL_TOAST_ID } from "../utils/appConstants";
 
 type QueryWithReauthContextType = {
   queryWithReauth: (
@@ -18,43 +18,44 @@ const QueryWithReauthContext = createContext<QueryWithReauthContextType | null>(
 
 export default function QueryWithReauthProvider({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  let refreshSessionPromise: Promise<void> | null = null;
+
+  async function refreshSessionForQuery() {
+    const { user, accessToken, accessTokenExpiresAt } = await refreshSession();
+    dispatch(setUser({ data: user }));
+    dispatch(setAuth({ accessToken, accessTokenExpiresAt }));
+  }
+
+  async function ensureSessionRefresh() {
+    if (!refreshSessionPromise) {
+      refreshSessionPromise = refreshSessionForQuery().finally(
+        () => (refreshSessionPromise = null),
+      );
+    }
+    return refreshSessionPromise;
+  }
 
   async function queryWithReauth(
     serviceFn: (...args: unknown[]) => Promise<Response>,
-    args: unknown[] | undefined,
+    args: unknown[] | undefined = undefined,
   ) {
     try {
-      const res = await serviceFn(...(args?.length ? args : []));
-
+      let res = await serviceFn(...(args ?? []));
       if (res.status === 401) {
-        const authRes = await fetch(`${API_BASE_URL}/users/refresh-session`, {
-          credentials: "include",
-        });
-
-        if (!authRes.ok) {
-          navigate("/");
-          throw new Error("Session expired. Please log in again");
-        }
-
-        if (authRes.ok) {
-          const { user, accessToken, accessTokenExpiresAt } = await authRes.json();
-          dispatch(setAuth({ accessToken, accessTokenExpiresAt }));
-          dispatch(setUser({ data: user }));
-          const retryRes = await serviceFn(...(args?.length ? args : []));
-          const data = await retryRes.json();
-          if (!retryRes.ok) throw new Error(`${data.message}` || "Something went wrong");
-          return data;
-        }
+        await ensureSessionRefresh();
+        res = await serviceFn(...(args ?? []));
+        if (res.status === 401) throw new Error("Session expired. Please log in again");
       }
+
+      if (!res.ok) throw new Error((await res.json()).message || "Something went wrong!");
       const data = await res.json();
-      if (!res.ok) throw new Error(`${data.message}` || "Something went wrong!");
       return data;
     } catch (err) {
       toast.custom(
         (t) => <AppToast type="fail" message={`${(err as Error).message}`} toastId={t.id} />,
         { duration: 5000, id: FAIL_TOAST_ID },
       );
+      throw err;
     }
   }
 
@@ -66,5 +67,7 @@ export default function QueryWithReauthProvider({ children }: { children: ReactN
 }
 
 export function useQueryWithReauth() {
-  // const context =
+  const context = use(QueryWithReauthContext);
+  if (!context) throw new Error("Context was used outside its provider");
+  return context;
 }
