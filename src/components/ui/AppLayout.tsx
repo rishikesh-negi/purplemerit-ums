@@ -18,7 +18,11 @@ export default function AppLayout() {
       !isAuthenticated ||
       (accessTokenExpiresAt && accessTokenExpiresAt?.getTime() - Date.now() <= 1_80_000)
     ) {
-      refreshSession();
+      try {
+        refreshSession();
+      } catch {
+        return;
+      }
     }
   }, [accessTokenExpiresAt, isAuthenticated, refreshSession]);
 
