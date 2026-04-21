@@ -1,17 +1,18 @@
 import type { ReactElement } from "react";
 import {
   HiOutlineArrowLeftCircle,
-  HiOutlineArrowsRightLeft,
+  HiOutlineArrowRightEndOnRectangle,
   HiOutlineBars3BottomRight,
   HiOutlineHome,
-  HiOutlinePresentationChartBar,
-  HiOutlineArrowRightEndOnRectangle,
+  HiOutlineUserGroup,
 } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 import { useSideNavToggle } from "../context/MobileSideNavContext";
+import { useLogout } from "../hooks/useLogout";
 import SideNavLink from "./SideNavLink";
 import Logo from "./ui/Logo";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../services/apiAuth";
+import { useAppSelector } from "../store/storeHooks";
+import { getUser } from "../store/slices/userSlice";
 
 export type SideNavLinkType = {
   name: string;
@@ -19,32 +20,29 @@ export type SideNavLinkType = {
   icon: ReactElement;
 };
 
-const sideNavLinks: SideNavLinkType[] = [
-  {
-    name: "Home",
-    href: "/",
-    icon: <HiOutlineHome className="text-xl xl:text-2xl text-sky-700" />,
-  },
-  {
-    name: "Transactions",
-    href: "/transactions",
-    icon: <HiOutlineArrowsRightLeft className="text-xl xl:text-2xl text-sky-700" />,
-  },
-  {
-    name: "Insights",
-    href: "/insights",
-    icon: <HiOutlinePresentationChartBar className="text-xl xl:text-2xl text-sky-700" />,
-  },
-];
-
 export default function SideNavigation() {
   const navigate = useNavigate();
   const { sideNavIsOpen, setSideNavIsOpen } = useSideNavToggle();
   const handleToggleSideNav = () => setSideNavIsOpen((curr) => !curr);
+  const { logout, isLoggingOut } = useLogout();
+  const user = useAppSelector(getUser);
 
-  async function handleLogout() {
-    const logoutStatus = await logout();
-  }
+  const sideNavLinks: SideNavLinkType[] = [
+    {
+      name: "Home",
+      href: "/",
+      icon: <HiOutlineHome className="text-xl xl:text-2xl text-sky-700" />,
+    },
+    ...(user?.role === "admin" || user?.role === "manager"
+      ? [
+          {
+            name: "Users",
+            href: "/users",
+            icon: <HiOutlineUserGroup className="text-xl xl:text-2xl text-sky-700" />,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <aside
@@ -70,7 +68,10 @@ export default function SideNavigation() {
         ))}
       </ul>
 
-      <button className="w-full px-8 sm:px-5 lg:px-6 xl:px-8 py-4 text-sm sm:text-md flex items-center gap-4 sm:gap-3 lg:gap-5 mt-auto border-t border-gray-200 hover:bg-gray-50 hover:text-sky-700 hover:font-semibold cursor-pointer">
+      <button
+        className="w-full px-8 sm:px-5 lg:px-6 xl:px-8 py-4 text-sm sm:text-md flex items-center gap-4 sm:gap-3 lg:gap-5 mt-auto border-t border-gray-200 hover:bg-gray-50 hover:text-sky-700 hover:font-semibold cursor-pointer disabled:text-faint-text disabled:cursor-not-allowed"
+        onClick={() => logout()}
+        disabled={isLoggingOut}>
         <HiOutlineArrowRightEndOnRectangle className="text-xl xl:text-2xl" />
         <span className="text-sm sm:text-md xl:text-lg">Logout</span>
       </button>
