@@ -26,11 +26,14 @@ const authSlice = createSlice({
         state.accessTokenExpiresAt?.getTime() > Date.now();
       state.accessTokenExpiresAt = action.payload.accessTokenExpiresAt;
     },
+    resetAuth() {
+      return initialState;
+    },
   },
 });
 
 export const getAuthState = (state: RootState) => state.auth;
 
-export const { setAuth } = authSlice.actions;
+export const { setAuth, resetAuth } = authSlice.actions;
 
 export default authSlice.reducer;
