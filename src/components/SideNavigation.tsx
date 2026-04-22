@@ -6,13 +6,12 @@ import {
   HiOutlineHome,
   HiOutlineUserGroup,
 } from "react-icons/hi2";
-import { useNavigate } from "react-router-dom";
 import { useSideNavToggle } from "../context/MobileSideNavContext";
 import { useLogout } from "../hooks/useLogout";
+import { getUser } from "../store/slices/userSlice";
+import { useAppSelector } from "../store/storeHooks";
 import SideNavLink from "./SideNavLink";
 import Logo from "./ui/Logo";
-import { useAppSelector } from "../store/storeHooks";
-import { getUser } from "../store/slices/userSlice";
 
 export type SideNavLinkType = {
   name: string;
@@ -21,7 +20,6 @@ export type SideNavLinkType = {
 };
 
 export default function SideNavigation() {
-  const navigate = useNavigate();
   const { sideNavIsOpen, setSideNavIsOpen } = useSideNavToggle();
   const handleToggleSideNav = () => setSideNavIsOpen((curr) => !curr);
   const { logout, isLoggingOut } = useLogout();
